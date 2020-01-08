@@ -1,2 +1,4 @@
-# d3-react-series-labella
-An exploration of using Labella in a d3 visualization
+# D3 React Series
+### d3-quadtree
+
+An exploration of using quadtree in a React & D3 visualization
