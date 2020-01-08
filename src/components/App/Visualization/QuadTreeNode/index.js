@@ -2,17 +2,17 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
-    grid: {
-        stroke: 'lightgray',
+    quadtree: {
+        stroke: 'rgba(75,75,75,0.99)',
         fill: 'none'
     }
 }));
 
-const Grid = ({rect}) => {
+const QuadTreeNode = ({rect}) => {
     const classes = useStyles();
 
     return (
-        <rect {...rect} className={classes.grid}/>
+        <rect {...rect} className={classes.quadtree}/>
     );
 };
-export default Grid;
+export default QuadTreeNode;

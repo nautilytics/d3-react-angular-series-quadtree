@@ -30,3 +30,17 @@ export const search = (quadtree, x0, y0, x3, y3) => {
     });
     return validData;
 };
+
+export const retrieveQuadtreeNodes = quadtree => {
+    // Collapse the quadtree into an array of rectangles.
+    // Inspired by https://bl.ocks.org/mbostock/4343214
+    let nodes = [];
+    quadtree.visit((node, x0, y0, x1, y1) => {
+        node.x0 = x0;
+        node.y0 = y0;
+        node.x1 = x1;
+        node.y1 = y1;
+        nodes.push(node);
+    });
+    return nodes;
+};
