@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {range} from 'd3-array';
 import {makeStyles} from '@material-ui/core';
 import {greatestCommonDivisor, retrieveQuadtreeNodes, search} from "../../../utils";
 import {quadtree as d3_quadtree} from "d3-quadtree";
 import Grid from "./Grid";
-import Points from "./Points";
 import ClusterPoint from "./ClusterPoint";
 import QuadTreeNode from "./QuadTreeNode";
+import {DURATION} from "../../../constant";
 
 const useStyles = makeStyles(theme => ({
     border: {
@@ -17,6 +17,9 @@ const useStyles = makeStyles(theme => ({
 
 const Visualization = () => {
     const classes = useStyles();
+    const [isClustered, setIsClustered] = useState(false);
+    const [showGridRects] = useState(false);
+    const [showQuadTreeRects] = useState(false);
 
     // Set up some constant variables for the visualization
     const width = 1000;
@@ -46,7 +49,15 @@ const Visualization = () => {
         ];
     }));
 
-    // Find the optimal grid size
+    // After n seconds, cluster the points based on the quad tree
+    useEffect(() => {
+        setTimeout(() => {
+            setIsClustered(true);
+        }, DURATION);
+    }, []);
+
+    // Calculate a grid size
+    // TODO - increase this number for less cross-over amongst points
     const clusterRange = greatestCommonDivisor(innerWidth, innerHeight);
 
     // Create a grid of rects
@@ -90,36 +101,40 @@ const Visualization = () => {
             </clipPath>
             <g transform={`translate(${margin.left},${margin.top})`}>
                 <rect className={classes.border} width={innerWidth} height={innerHeight}/>
-                <Points points={nodes}/>
-                <g className="grid-group">
-                    {
-                        gridRects.map((gridRect, i) => {
-                            return (
-                                <Grid key={`grid-for-${i}`} rect={gridRect}/>
-                            )
-                        })
-                    }
-                </g>
-                <g className="quad-tree-group" clipPath="url(#quadTreeClip)">
-                    {
-                        retrieveQuadtreeNodes(quadtree).map((node, i) => {
-                            return (
-                                <QuadTreeNode key={`quad-tree-node-${i}`}
-                                              rect={{
-                                                  x: node.x0,
-                                                  y: node.y0,
-                                                  width: node.y1 - node.y0,
-                                                  height: node.x1 - node.x0
-                                              }}/>
-                            )
-                        })
-                    }
-                </g>
+                {
+                    showGridRects && <g className="grid-group">
+                        {
+                            gridRects.map((gridRect, i) => {
+                                return (
+                                    <Grid key={`grid-for-${i}`} rect={gridRect}/>
+                                )
+                            })
+                        }
+                    </g>
+                }
+                {
+                    showQuadTreeRects && <g className="quad-tree-group" clipPath="url(#quadTreeClip)">
+                        {
+                            retrieveQuadtreeNodes(quadtree).map((node, i) => {
+                                return (
+                                    <QuadTreeNode key={`quad-tree-node-${i}`}
+                                                  rect={{
+                                                      x: node.x0,
+                                                      y: node.y0,
+                                                      width: node.y1 - node.y0,
+                                                      height: node.x1 - node.x0
+                                                  }}/>
+                                )
+                            })
+                        }
+                    </g>
+                }
                 <g className="cluster-point-group">
                     {
                         clusterPoints.map((clusterPoint, i) => {
                             return (
-                                <ClusterPoint key={`cluster-point-${i}`} clusterPoint={clusterPoint}/>
+                                <ClusterPoint key={`cluster-point-${i}`} clusterPoint={clusterPoint}
+                                              isClustered={isClustered}/>
                             )
                         })
                     }

@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {makeStyles} from '@material-ui/core';
+import {select} from "d3-selection";
+import 'd3-transition';
+import {DURATION} from "../../../../constant";
 
 const useStyles = makeStyles(theme => ({
     marker: {
@@ -9,19 +12,33 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Points = ({points}) => {
+const Points = ({points, isClustered}) => {
     const classes = useStyles();
+    const pointGroupRef = useRef();
+
+    useEffect(() => {
+        if (isClustered) {
+            select(pointGroupRef.current)
+                .selectAll('circle')
+                .transition()
+                .duration(DURATION)
+                .attr('cx', points[0])
+                .attr('cy', points[1])
+                .style('fill-opacity', 0);
+        }
+    }, [isClustered, points]);
 
     return (
-        <g className="original-point-group">
+        <g className="original-point-group" ref={pointGroupRef}>
             {
-                points.map(point => {
+                points[2].map(point => {
+                    const [x, y, item] = point;
                     return (
-                        <circle key={point[2].id}
+                        <circle key={item.id}
                                 className={classes.marker}
-                                cx={point[0]}
-                                cy={point[1]}
-                                r={point[2].r}/>
+                                cx={x}
+                                cy={y}
+                                r={item.r}/>
                     )
                 })
             }
