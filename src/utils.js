@@ -1,3 +1,6 @@
+import {forceCollide, forceSimulation, forceX, forceY} from "d3-force";
+import moment from "moment";
+
 export const greatestCommonDivisor = (x, y) => {
     // Return the greatest common divisor of two points
     if ((typeof x !== 'number') || (typeof y !== 'number'))
@@ -44,3 +47,36 @@ export const retrieveQuadtreeNodes = quadtree => {
     });
     return nodes;
 };
+
+export const calculateLayout = (items, spacing = 0.01) => {
+    // Calculate a force directed placement for each point
+    const MAX_STEPS = 300,
+        STRENGTH = 1,
+        ALPHA = 0.3;
+
+    if (!items.length) return [];
+
+    const getY = d => d.y;
+    const getX = d => d.x;
+    const getCollision = d => d.r + spacing;
+    const sim = forceSimulation(items)
+        .force('collide', forceCollide(getCollision))
+        .force('x', forceX(getX).strength(STRENGTH))
+        .force('y', forceY(getY).strength(STRENGTH))
+        .alpha(ALPHA)
+        .stop();
+
+    const upperBound = Math.ceil(Math.log(sim.alphaMin()) / Math.log(1 - sim.alphaDecay()));
+
+    for (let i = 0; i < Math.min(MAX_STEPS, upperBound); ++i) sim.tick();
+
+    return items;
+};
+
+export const getTimeForYAxis = dt =>
+    moment()
+        .startOf('day')
+        .add(dt.format('HH'), 'hours')
+        .add(dt.format('mm'), 'minutes');
+export const addStartTime = dt => dt.startOf('day').add(8, 'hours');
+export const getRandomMinute = () => parseInt(Math.random() * 60, 10);

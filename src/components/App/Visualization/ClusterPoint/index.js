@@ -3,12 +3,12 @@ import {makeStyles} from '@material-ui/core';
 import "d3-transition";
 import {select} from "d3-selection";
 import Points from "../Points";
-import {DURATION} from "../../../../constant";
+import {DURATION, MARKER_RADIUS} from "../../../../constant";
 
 const useStyles = makeStyles(theme => ({
     cluster: {
         stroke: 'none',
-        fill: 'red',
+        fill: 'steelblue',
         fillOpacity: 0
     },
     clusterPointMarker: {
@@ -24,7 +24,8 @@ const ClusterPoint = ({clusterPoint, isClustered}) => {
     const clusterPointRef = useRef();
 
     // Retrieve the radius of the point by getting the first point
-    const r = clusterPoint[2][0][2].r;
+    const [x, y, pointArray] = clusterPoint;
+    const r = MARKER_RADIUS;
 
     useEffect(() => {
         if (isClustered) {
@@ -46,13 +47,13 @@ const ClusterPoint = ({clusterPoint, isClustered}) => {
     return <g className='group-of-clusters-and-points'>
         <g className={classes.clusterPointMarker}
            ref={clusterPointRef}
-           transform={`translate(${clusterPoint[0]},${clusterPoint[1]})`}>
+           transform={`translate(${x},${y})`}>
             <circle className={classes.cluster}
                     r={r}/>
             {
-                clusterPoint[2].length > 1 &&
+                pointArray.length > 1 &&
                 <text className={classes.label} dy={r / 2}>
-                    {clusterPoint[2].length}
+                    {pointArray.length}
                 </text>
             }
         </g>
