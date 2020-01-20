@@ -79,4 +79,4 @@ export const getTimeForYAxis = dt =>
         .add(dt.format('HH'), 'hours')
         .add(dt.format('mm'), 'minutes');
 export const addStartTime = dt => dt.startOf('day').add(8, 'hours');
-export const getRandomMinute = () => parseInt(Math.random() * 60, 10);
+export const getRandomMinute = () => Math.floor(Math.random() * 60);
