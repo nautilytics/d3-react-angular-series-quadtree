@@ -1,0 +1,7 @@
+<div class="Visualization">
+  <svg [attr.width.px]="width" [attr.height.px]="height">
+    <g attr.transform="{{gTransform}}">
+      <g app-axes [item]="formatAxes()"></g>
+    </g>
+  </svg>
+</div>
