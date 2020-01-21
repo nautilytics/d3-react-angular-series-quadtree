@@ -1,4 +1,3 @@
-import {forceCollide, forceSimulation, forceX, forceY} from "d3-force";
 import moment from "moment";
 
 export const greatestCommonDivisor = (x, y) => {
@@ -32,45 +31,6 @@ export const search = (quadtree, x0, y0, x3, y3) => {
         return x1 >= x3 || y1 >= y3 || x2 < x0 || y2 < y0;
     });
     return validData;
-};
-
-export const retrieveQuadtreeNodes = quadtree => {
-    // Collapse the quadtree into an array of rectangles.
-    // Inspired by https://bl.ocks.org/mbostock/4343214
-    let nodes = [];
-    quadtree.visit((node, x0, y0, x1, y1) => {
-        node.x0 = x0;
-        node.y0 = y0;
-        node.x1 = x1;
-        node.y1 = y1;
-        nodes.push(node);
-    });
-    return nodes;
-};
-
-export const calculateLayout = (items, spacing = 0.01) => {
-    // Calculate a force directed placement for each point
-    const MAX_STEPS = 300,
-        STRENGTH = 1,
-        ALPHA = 0.3;
-
-    if (!items.length) return [];
-
-    const getY = d => d.y;
-    const getX = d => d.x;
-    const getCollision = d => d.r + spacing;
-    const sim = forceSimulation(items)
-        .force('collide', forceCollide(getCollision))
-        .force('x', forceX(getX).strength(STRENGTH))
-        .force('y', forceY(getY).strength(STRENGTH))
-        .alpha(ALPHA)
-        .stop();
-
-    const upperBound = Math.ceil(Math.log(sim.alphaMin()) / Math.log(1 - sim.alphaDecay()));
-
-    for (let i = 0; i < Math.min(MAX_STEPS, upperBound); ++i) sim.tick();
-
-    return items;
 };
 
 export const getTimeForYAxis = dt =>

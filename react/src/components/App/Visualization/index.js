@@ -1,38 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {range} from 'd3-array';
-import {makeStyles} from '@material-ui/core';
 import {
     addStartTime,
-    calculateLayout,
     getRandomMinute,
     getTimeForYAxis,
     greatestCommonDivisor,
-    retrieveQuadtreeNodes,
     search
 } from "../../../utils";
 import {quadtree as d3_quadtree} from "d3-quadtree";
 import {scaleTime} from 'd3-scale';
-import Grid from "./Grid";
 import ClusterPoint from "./ClusterPoint";
-import QuadTreeNode from "./QuadTreeNode";
 import moment from 'moment';
 import {DURATION, NUMBER_OF_DAYS, MARKER_RADIUS} from "../../../constant";
 import Axes from "./Axes";
-import ForceLayoutPoints from "./ForceLayoutPoints";
-
-const useStyles = makeStyles(theme => ({
-    border: {
-        stroke: 'black',
-        fill: 'none',
-    }
-}));
 
 const Visualization = () => {
-    const classes = useStyles();
     const [isClustered, setIsClustered] = useState(true);
-    const [showGridRects] = useState(false);
-    const [showQuadTreeRects] = useState(false);
-    const [isForceLayout] = useState(false);
 
     // Set up some constant variables for the visualization
     const width = 1000;
@@ -82,27 +65,14 @@ const Visualization = () => {
 
     // After n seconds, cluster the points based on the quad tree
     useEffect(() => {
-        // setTimeout(() => {
-        //     setIsClustered(true);
-        // }, DURATION);
+        setTimeout(() => {
+            setIsClustered(true);
+        }, DURATION);
     }, []);
 
     // Calculate a grid size
     // TODO - increase this number for less cross-over amongst points
     const clusterRange = greatestCommonDivisor(innerWidth, innerHeight);
-
-    // Create a grid of rects
-    let gridRects = [];
-    for (let x = 0; x < innerWidth; x += clusterRange) {
-        for (let y = 0; y < innerHeight; y += clusterRange) {
-            gridRects.push({
-                x,
-                y,
-                width: clusterRange,
-                height: clusterRange
-            })
-        }
-    }
 
     // Create cluster points, i.e. an array of:
     // [[cluster_x, cluster_y, [points_to_cluster], ...]
@@ -128,41 +98,8 @@ const Visualization = () => {
 
     return (
         <svg width={width} height={height}>
-            <clipPath id="quadTreeClip">
-                <rect width={innerWidth} height={innerHeight}/>
-            </clipPath>
             <g transform={`translate(${margin.left},${margin.top})`}>
-                {isForceLayout && <ForceLayoutPoints
-                    points={calculateLayout(nodes.map(node => ({x: node[0], y: node[1], r: markerRadius})))}/>}
-                {
-                    showGridRects && <g className="grid-group">
-                        {
-                            gridRects.map((gridRect, i) => {
-                                return (
-                                    <Grid key={`grid-for-${i}`} rect={gridRect}/>
-                                )
-                            })
-                        }
-                    </g>
-                }
-                {
-                    showQuadTreeRects && <g className="quad-tree-group" clipPath="url(#quadTreeClip)">
-                        {
-                            retrieveQuadtreeNodes(quadtree).map((node, i) => {
-                                return (
-                                    <QuadTreeNode key={`quad-tree-node-${i}`}
-                                                  rect={{
-                                                      x: node.x0,
-                                                      y: node.y0,
-                                                      width: node.y1 - node.y0,
-                                                      height: node.x1 - node.x0
-                                                  }}/>
-                                )
-                            })
-                        }
-                    </g>
-                }
-                {!isForceLayout && <g className="cluster-point-group">
+                <g className="cluster-point-group">
                     {
                         clusterPoints.map((clusterPoint, i) => {
                             return (
@@ -171,7 +108,7 @@ const Visualization = () => {
                             )
                         })
                     }
-                </g>}
+                </g>
                 <Axes height={innerHeight} xScale={xScale} yScale={yScale}/>
             </g>
         </svg>
