@@ -6,6 +6,7 @@ import { VisualizationComponent } from './visualization/visualization.component'
 import { AxesComponent } from './visualization/axes/axes.component';
 import { ClusterPointComponent } from './visualization/cluster-point/cluster-point.component';
 import { PointsComponent } from './visualization/points/points.component';
+import { SvgTransitionDirective } from '../directives/svg-transition.directive';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { PointsComponent } from './visualization/points/points.component';
     VisualizationComponent,
     AxesComponent,
     ClusterPointComponent,
-    PointsComponent
+    PointsComponent,
+    SvgTransitionDirective
   ],
   imports: [
     BrowserModule
@@ -21,4 +23,5 @@ import { PointsComponent } from './visualization/points/points.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

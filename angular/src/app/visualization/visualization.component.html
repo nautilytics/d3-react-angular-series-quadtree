@@ -1,9 +1,9 @@
 <div class="Visualization">
   <svg [attr.width.px]="width" [attr.height.px]="height">
     <g [attr.transform]="gTransform">
-      <g *ngFor="let node of clusterPoints">
-        <g app-cluster-point [item]="node"></g>
-        <g app-points [points]="node[2]"></g>
+      <g class="cluster-point-group" *ngFor="let node of clusterPoints; index as i; trackBy: trackByPoint">
+        <g app-cluster-point [item]="node" [isClustered]="isClustered"></g>
+        <g app-points [item]="node" [isClustered]="isClustered"></g>
       </g>
       <g app-axes [item]="formatAxes()"></g>
     </g>

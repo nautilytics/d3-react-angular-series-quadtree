@@ -1,8 +1,17 @@
 <svg:g [ngClass]="'group-of-clusters-and-points'">
   <svg:g [ngClass]="'cluster-point'" [attr.transform]="gTransform">
-    <svg:circle [ngClass]="'cluster'" [attr.r.px]="markerRadius">
+    <svg:circle [ngClass]="'cluster'"
+                [attr.r.px]="markerRadius"
+                [appSvgTransition]="transition"
+                [d3-attr]="{'fill-opacity': isClustered * .5}"
+    >
     </svg:circle>
-    <svg:text *ngIf="item[2].length" [ngClass]="'label'" [attr.dy]="markerRadius / 2">
+    <svg:text *ngIf="item[2].length"
+              [ngClass]="'label'"
+              [attr.dy]="markerRadius / 2"
+              [appSvgTransition]="transition"
+              [d3-attr]="{'fill-opacity': isClustered}"
+    >
       {{item[2].length}}
     </svg:text>
   </svg:g>

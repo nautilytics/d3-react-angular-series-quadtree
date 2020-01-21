@@ -11,14 +11,11 @@ export interface ClusterPoint {
 })
 export class ClusterPointComponent {
   @Input() item: ClusterPoint;
+  @Input() isClustered: number;
   markerRadius = MARKER_RADIUS;
   protected transition = t => t.duration(DURATION);
-
-  constructor() {
-  }
 
   get gTransform(): string {
     return `translate(${this.item[0]},${this.item[1]})`;
   }
-
 }

@@ -1,11 +1,11 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { AxesItem } from './axes/axes.component';
 import { range } from 'd3-array';
 import { scaleTime } from 'd3-scale';
 import { quadtree as d3_quadtree } from 'd3-quadtree';
-import { addStartTime, getRandomMinute, getTimeForYAxis, search } from '../../lib/util';
-import { MARKER_RADIUS, NUMBER_OF_DAYS } from '../../lib/constant';
+import { addStartTime, getRandomMinute, getTimeForYAxis, greatestCommonDivisor, search } from '../../lib/util';
+import { DURATION, MARKER_RADIUS, NUMBER_OF_DAYS } from '../../lib/constant';
 
 @Component({
   selector: 'app-visualization',
@@ -26,6 +26,7 @@ export class VisualizationComponent implements OnInit {
   clusterRange: number;
   clusterPoints: any[];
   data: any[];
+  isClustered = 0;
 
   constructor(protected element: ElementRef) {
   }
@@ -40,6 +41,11 @@ export class VisualizationComponent implements OnInit {
 
   ngOnInit(): void {
     this.draw();
+
+    // After a few seconds, begin the animation to show points moving into clusters
+    setTimeout(() => {
+      this.isClustered = 1;
+    }, DURATION)
   }
 
   updateData() {
@@ -84,11 +90,10 @@ export class VisualizationComponent implements OnInit {
         }
       }
     }
-    console.log(this.clusterPoints);
   }
 
   setAxisScales() {
-    // Set up an x- and y-scale
+    // Set up an x- and y-scale and cluster range
     this.xScale
       .range([0, this.innerWidth])
       .domain([moment().subtract(NUMBER_OF_DAYS, 'days'), moment()]);
@@ -100,6 +105,9 @@ export class VisualizationComponent implements OnInit {
         addStartTime(moment()).subtract(1, 'hour'),
         addStartTime(moment()).add(10, 'hours')
       ]);
+
+    // Set up the grid size
+    this.clusterRange = greatestCommonDivisor(this.innerWidth, this.innerHeight);
   }
 
   get gTransform(): string {
@@ -114,8 +122,8 @@ export class VisualizationComponent implements OnInit {
     };
   }
 
-  protected trackByPoint(item) {
-    return item.id;
+  protected trackByPoint(index: number, obj: object): number {
+    return index;
   }
 
   private draw() {

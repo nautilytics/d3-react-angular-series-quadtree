@@ -18,17 +18,17 @@ body {
           .cluster {
             stroke: none;
             fill: steelblue;
-            fill-opacity: 0;
           }
 
           .label {
             text-anchor: middle;
           }
+        }
 
+        .point-group {
           .marker {
             stroke: none;
             fill: steelblue;
-            fill-opacity: .25;
           }
         }
 

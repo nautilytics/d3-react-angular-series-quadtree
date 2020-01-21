@@ -1,6 +1,14 @@
 <svg:g [ngClass]="'point-group'">
-  <svg:circle [ngClass]="'marker'" *ngFor="let point of points"
+  <svg:circle [ngClass]="'marker'" *ngFor="let point of item[2]; index as i; trackBy: trackByPoint"
               [attr.cx.px]="point[0]"
               [attr.cy.px]="point[1]"
-              [attr.r.px]="markerRadius"></svg:circle>
+              [attr.r.px]="markerRadius"
+              [appSvgTransition]="transition"
+              [d3-attr]="{
+              'fill-opacity': (1 - isClustered) * .25,
+              cx: isClustered ? item[0] : point[0],
+              cy: isClustered ? item[1] : point[1]
+              }"
+  >
+  </svg:circle>
 </svg:g>
