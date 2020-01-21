@@ -7,15 +7,31 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   .App {
-    width: calc(100vw * .95);
-    height: 600px;
-    margin: 20px;
+    text-align: center;
 
     .Visualization {
-      width: 100%;
-      height: 100%;
 
       svg {
+        .cluster-point {
+          fill-opacity: 0;
+
+          .cluster {
+            stroke: none;
+            fill: steelblue;
+            fill-opacity: 0;
+          }
+
+          .label {
+            text-anchor: middle;
+          }
+
+          .marker {
+            stroke: none;
+            fill: steelblue;
+            fill-opacity: .25;
+          }
+        }
+
         .axes {
           .axis {
             path {
@@ -26,10 +42,6 @@ body {
 
             text {
               text-rendering: optimizeLegibility;
-              font-size: 11px;
-              fill: #777777;
-              font-weight: bold;
-              text-transform: uppercase;
               stroke: none;
             }
           }

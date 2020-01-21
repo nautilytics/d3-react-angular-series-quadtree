@@ -84,6 +84,7 @@ export class VisualizationComponent implements OnInit {
         }
       }
     }
+    console.log(this.clusterPoints);
   }
 
   setAxisScales() {
