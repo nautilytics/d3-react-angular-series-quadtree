@@ -15,7 +15,8 @@ const useStyles = makeStyles(theme => ({
         fillOpacity: 0
     },
     label: {
-        textAnchor: 'middle'
+        textAnchor: 'middle',
+        fontWeight: 'bold'
     }
 }));
 
