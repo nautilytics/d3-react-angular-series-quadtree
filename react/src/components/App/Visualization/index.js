@@ -15,7 +15,7 @@ import {DURATION, NUMBER_OF_DAYS, MARKER_RADIUS} from "../../../constant";
 import Axes from "./Axes";
 
 const Visualization = () => {
-    const [isClustered, setIsClustered] = useState(true);
+    const [isClustered, setIsClustered] = useState(false);
 
     // Set up some constant variables for the visualization
     const width = 1000;
@@ -67,7 +67,7 @@ const Visualization = () => {
     useEffect(() => {
         setTimeout(() => {
             setIsClustered(true);
-        }, DURATION);
+        }, 5000);
     }, []);
 
     // Calculate a grid size
